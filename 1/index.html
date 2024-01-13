@@ -9,18 +9,32 @@
 </head>
 <body>
     <header>
-        <div class="header-img">
-            <img class="himage" src="http://cdn.lifehacker.ru/wp-content/uploads/2017/10/note_1508091075-1280x640.jpg" alt="Список дел">
-        </div>
-        <div class="header-logo">
-            <h1>
-                Органайзер
-            </h1>
-        </div>
-        <div class="header-authorization">
-            <input type="button" value="Вход">
-            <input type="button" value="Регистрация">
+        <div class="header">
+            <div class="header-img">
+                <img class="logo-img" src="http://cdn.lifehacker.ru/wp-content/uploads/2017/10/note_1508091075-1280x640.jpg" alt="Список дел">
+            </div>
+            <div class="header-logo">
+                <h1>
+                    Органайзер
+                </h1>
+            </div>
+            <div class="header-authorization">
+                <a href="#" class="signin">Вход</a>
+                <a href="#" class="signup">Регистрация</a>
+            </div>
         </div>
     </header>
+
+    <div class="main">
+        <div class="new-case">
+            <input type="text" class="btn-new-case" placeholder="Введите название нового дела" style="width: 190px;">
+            <div>
+                Выберите дату окончаниия дела
+                <input type="date" name="" id="">
+            </div>
+            <input type="button" value="Добавить дело">
+        </div>
+    </div>
+
 </body>
 </html>
