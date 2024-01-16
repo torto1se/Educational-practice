@@ -1,54 +1,55 @@
 // npm run start
 
-const http = require('http');
-const fs = require('fs');
+const express = require('express');
 const path = require('path');
+const app = express();
 const PORT = 3000;
+app.set('view engine', 'ejs');
 
-const server = http.createServer((req, res) => {
-    console.log('Server request');
+const createPath = (page) => path.resolve(__dirname, 'ejs-views', `${page}.ejs`);
 
-    res.setHeader('Content-Type', 'text/html');
-
-    const createPath = (page) => path.resolve(__dirname, 'views', `${page}.html`);
-
-    let basePath = '';
-
-    switch(req.url) {
-        case '/':
-        case '/home':
-        case '/index.html':
-            basePath = createPath('index');
-            res.statusCode = 200;
-            break;
-        case '/about-us':
-            res.statusCode = 301;
-            res.setHeader('Location', '/contacts');
-            res.end();
-            break;
-        case '/contacts':
-            basePath = createPath('contacts');
-            res.statusCode = 200;
-            break;
-        default:
-            basePath = createPath('error');
-            res.statusCode = 404;
-            break;
-    }
-
-    fs.readFile(basePath, (err,data) => {
-        if (err) {
-            console.log(err);
-            res.statusCode = 500;
-            res.end();
-        }
-        else {
-            res.write(data);
-            res.end();
-        }
-    });
-});
-
-server.listen(PORT, 'localhost', (error) =>{
+app.listen(PORT, (error) =>{
     error ? console.log(error) : console.log(`listening port ${PORT}`);
 });
+
+app.get('/', (req, res) => {
+    const title = 'Home';
+    res.render(createPath('index'), {title});
+});
+
+app.get('/contacts', (req, res) => {
+    const title = 'Contacts';
+    const contacts = [
+        { name: 'YouTube', link: 'http://youtube.com/YauhenKavalchuk' },
+        { name: 'Twitter', link: 'http://github.com/YauhenKavalchuk' },
+        { name: 'GitHub', link: 'http://twitter.com/YauhenKavalchuk' },
+    ]
+    res.render(createPath('contacts'), {contacts, title});
+});
+
+app.get('/about-us', (req, res) => {
+    res.redirect('/contacts');
+});
+
+app.get('/posts/:id', (req, res) => {
+    const title = 'Post';
+    res.render(createPath('post'), {title});
+});
+
+app.get('/posts', (req, res) => {
+    const title = 'Post';
+    res.render(createPath('posts'), {title});
+});
+
+app.get('/add-post', (req, res) => {
+    const title = 'Add post';
+    res.render(createPath('add-post'), {title});
+});
+
+app.use((req, res) => {
+    const title = 'Error Page';
+    res
+        .status(404)
+        .render(createPath('error'), {title});
+});
+
