@@ -2,45 +2,87 @@
 
 const express = require('express');
 const path = require('path');
-
+const Movie = require('./models/movies');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
 const Post = require('./models/post');
-
-
-
 const app = express();
-
 app.set('view engine', 'ejs');
-
-const {connectToDb, getDb} = require('./db');
 const PORT = 3000;
+const URL = 'mongodb://127.0.0.1:27017/moviebox';
+app.use(express.json());
 
-let db;
+mongoose
+    .connect(URL)
+    .then(()=> console.log('Connected to MongoDB'))
+    .catch((err) => console.log(`DB connection error: ${err}`));
 
-connectToDb((err) => {
-    if (!err) {
-      app.listen(PORT, (err) => {
-        err ? console.log(err) : console.log(`Listening port ${PORT}`);
-      });
-      db = getDb();
-    } else {
-      console.log(`DB connection error: ${err}`);
-    }
+app.listen(PORT, (err) => {
+    err ? console.log(err) : console.log(`Listening port ${PORT}`);
+});
+
+  const handleError = (res, error) => {
+    res.status(500).json({error});
+  }
+
+  app.get('/movies', (req, res) => {
+    Movie
+      .find()
+      .sort({ title: 1 })
+      .then((movies) => {
+        res
+          .status(200)
+          .json(movies);
+      })
+      .catch(() => handleError(res, "Something goes wrong..."));
+  });
+  
+  app.get('/movies/:id', (req, res) => {
+        Movie
+        .findById(req.params.id)
+        .then((movie) => {
+          res
+            .status(200)
+            .json(movie);
+        })
+        .catch(() => handleError(res, "Something goes wrong..."));
   });
 
-// const db = 'mongodb+srv://torto1se:gosha24054571@cluster0.ea2kvkt.mongodb.net/'
+  app.delete('/movies/:id', (req, res) => {
+        Movie
+        .findByIdAndDelete(req.params.id)
+        .then((result) => {
+          res
+            .status(200)
+            .json(result);
+        })
+        .catch(() => handleError(res, "Something goes wrong..."));
+  });
 
-// mongoose
-//     .connect(db, {useNewUrlParser: true, useUnifiedTopology: true})
-//     .then((res) => console.log('Connected to DB'))
-//     .catch((error) => console.log(error));
+  app.post('/movies', (req, res) => {
+    const movie = new Movie(req.body);
+    movie
+    .save()
+    .then((result) => {
+      res
+        .status(201)
+        .json(result);
+    })
+    .catch(() => handleError(res, "Something goes wrong..."));
+  });
+
+  app.patch('/movies/:id', (req, res) => {
+        Movie
+        .findByIdAndUpdate(req.params.id,req.body)
+        .then((result) => {
+          res
+            .status(200)
+            .json(result);
+        })
+        .catch(() => handleError(res, "Something goes wrong..."));
+  });
 
 const createPath = (page) => path.resolve(__dirname, 'ejs-views', `${page}.ejs`);
-
-// app.listen(PORT, (error) =>{
-//     error ? console.log(error) : console.log(`listening port ${PORT}`);
-// });
 
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
 app.use(express.static('styles'));
