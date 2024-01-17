@@ -3,16 +3,39 @@
 const express = require('express');
 const path = require('path');
 const app = express();
-const PORT = 3000;
 const morgan = require('morgan');
+const mongoose = require('mongoose');
 
 app.set('view engine', 'ejs');
 
+const {connectToDb, getDb} = require('./db');
+const PORT = 3000;
+
+let db;
+
+connectToDb((err) => {
+    if(!err) {
+        app.listen(PORT, (err) =>{
+            err ? console.log(err) : console.log(`listening port ${PORT}`);
+        });
+        db= getDb();
+    } else {
+        console.log(`DB connection error: ${err}`);
+    }
+});
+
+// const db = 'mongodb+srv://torto1se:gosha24054571@cluster0.ea2kvkt.mongodb.net/'
+
+// mongoose
+//     .connect(db, {useNewUrlParser: true, useUnifiedTopology: true})
+//     .then((res) => console.log('Connected to DB'))
+//     .catch((error) => console.log(error));
+
 const createPath = (page) => path.resolve(__dirname, 'ejs-views', `${page}.ejs`);
 
-app.listen(PORT, (error) =>{
-    error ? console.log(error) : console.log(`listening port ${PORT}`);
-});
+// app.listen(PORT, (error) =>{
+//     error ? console.log(error) : console.log(`listening port ${PORT}`);
+// });
 
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
 app.use(express.static('styles'));
@@ -43,7 +66,7 @@ app.get('/posts/:id', (req, res) => {
         id: '1', 
         text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente quidem provident, dolores, vero laboriosam nemo mollitia impedit unde fugit sint eveniet, minima odio ipsum sed recusandae aut iste aspernatur dolorem.',
         title: 'Post title',
-        date: '05.05.2021',
+        date: '05.05.2021', 
         author: 'Yauhen',
     };
     res.render(createPath('post'), {title, post});
