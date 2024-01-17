@@ -2,9 +2,14 @@
 
 const express = require('express');
 const path = require('path');
-const app = express();
+
 const morgan = require('morgan');
 const mongoose = require('mongoose');
+const Post = require('./models/post');
+
+
+
+const app = express();
 
 app.set('view engine', 'ejs');
 
@@ -14,15 +19,15 @@ const PORT = 3000;
 let db;
 
 connectToDb((err) => {
-    if(!err) {
-        app.listen(PORT, (err) =>{
-            err ? console.log(err) : console.log(`listening port ${PORT}`);
-        });
-        db= getDb();
+    if (!err) {
+      app.listen(PORT, (err) => {
+        err ? console.log(err) : console.log(`Listening port ${PORT}`);
+      });
+      db = getDb();
     } else {
-        console.log(`DB connection error: ${err}`);
+      console.log(`DB connection error: ${err}`);
     }
-});
+  });
 
 // const db = 'mongodb+srv://torto1se:gosha24054571@cluster0.ea2kvkt.mongodb.net/'
 
@@ -88,14 +93,14 @@ app.get('/posts', (req, res) => {
 
 app.post('/add-post', (req, res) => {
     const { title, author, text} = req.body;
-    const post = {
-        id: new Date(),
-        date: (new Date()).toLocaleDateString(),
-        title,
-        author,
-        text,
-    }
-    res.render(createPath('post'), {post, title});
+    const post = new Post({title, author, text});
+    post
+        .save()
+        .then((result) => res.send(result))
+        .catch((error) =>{
+            console.log(error);
+            res.render(createPath('error'), {title:'Error'})
+        })
 });
 
 app.get('/add-post', (req, res) => {

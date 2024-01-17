@@ -1,19 +1,21 @@
 const { MongoClient } = require('mongodb');
-const URL = 'mongodb://localhost:27017/node-blog';
+
+const URL = 'mongodb://127.0.0.1:27017/blogs';
 
 let dbConnection;
 
 module.exports = {
-    connectToDb: (cb) => {
-        MongoClient
-        .connect(URL)
-        .then((client) => {
-            console.log('Connected to MongoDB');
-            dbConnection = client.db();
-            return cb();
-        })
-        .catch((err) => {
-            return cb(err);
-        })
-    }
+  connectToDb: (cb) => {
+    MongoClient
+      .connect(URL)
+      .then((client) => {
+        console.log('Connected to MongoDB');
+        dbConnection = client.db();
+        return cb();
+      })
+      .catch((err) => {
+        return cb(err);
+      });
+  },
+  getDb: () => dbConnection,
 }
