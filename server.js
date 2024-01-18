@@ -3,12 +3,14 @@
 const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
+const authRouter = require('./authRouter');
 const methodOverride = require('method-override');
 const app = express();
 app.set('view engine', 'ejs');
 const PORT = 3000;
 const URL = 'mongodb://127.0.0.1:27017/blogs';
 app.use(express.json());
+app.use("/auth", authRouter);
 const postRoutes = require('./routes/post-routes');
 const contactsRoutes = require('./routes/contact-routes');
 const createPath = require('./helpers/create-path');
