@@ -6,7 +6,7 @@ const postSchema = new Schema({
         type: String,
         required: true,
     },
-    ttitle: {
+    title: {
         type: String,
         required: true,
     },
@@ -17,3 +17,5 @@ const postSchema = new Schema({
 }, {timestamps: true});
 
 const Post = mongoose.model('Post', postSchema);
+
+module.exports = Post;

@@ -3,7 +3,8 @@
   <%- include('./partials/head.ejs') %>
 <body>
   <%- include('./partials/nav.ejs') %>
-  <h1>Contacts:</h1>
+  <div style="margin-top: 200px;  display: flex; flex-direction: column; align-items: center;">
+  <h1>Контакты:</h1>
   <ul>
     <% if (contacts.length) { %>
       <% contacts.forEach(({ link, name }) => { %>
@@ -13,5 +14,6 @@
       <% }) %>
     <% } %>
   </ul>
+  </div>
 </body>
 </html>
