@@ -14,6 +14,10 @@ const postSchema = new Schema({
         type: String,
         required: true,
     },
+    endDate: {
+        type: Date,
+        required: true, 
+    },
 }, {timestamps: true});
 
 const Post = mongoose.model('Post', postSchema);

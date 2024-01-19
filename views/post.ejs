@@ -3,10 +3,18 @@
   <%- include('./partials/head.ejs') %>
 <body>
   <%- include('./partials/nav.ejs') %>
+  <%  function formatDate(dateString) {
+    const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+    const formattedDate = new Date(dateString)
+    .toLocaleDateString('en-GB', options)
+    .replace(/\//g, '.'); 
+    return formattedDate;
+  } %>
   <article class="post">
     <div class="info">
-      <span><%= post.createdAt.toLocaleDateString() || 'No date' %></span>
-      <span><%= post.author %></span>
+      <span>Дата создания: <%= post.createdAt.toLocaleDateString() || 'No date' %></span>
+      <span>Дата окончания: <%= formatDate(post.endDate) %></span>
+      <span>Автор: <%= post.author %></span>
     </div>
     <h1><%= post.title %></h1>
     <p><%= post.text %></p>

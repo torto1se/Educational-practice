@@ -4,9 +4,22 @@
 <body>
   <%- include('./partials/nav.ejs') %>
   <h1>Дела:</h1>
+  <div class="sort-buttons"  style="text-align: right;">
+    <a href="/posts?sort=endDate" class="btn-sort <%= sortBy === 'endDate' ? 'active' : '' %>"><button class="srt-endDate">По дате окончания</button></a>
+    <a href="/posts?sort=createdAt" class="btn-sort <%= sortBy === 'createdAt' ? 'active' : '' %>"><button class="srt-createdAt">По дате создания</button></a>
+  </div>
+     
   <ul>
-    <% if (posts.length) { %>
-      <% posts.forEach(({ id, title, createdAt, text, author }) => { %>
+    <%  function formatDate(dateString) {
+      const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+      const formattedDate = new Date(dateString)
+      .toLocaleDateString('en-GB', options)
+      .replace(/\//g, '.'); 
+      return formattedDate;
+    }
+    
+    if (posts.length) { %>
+      <% posts.forEach(({ id, title, createdAt, text, author, endDate }) => { %>
         <li>
           <article>
             <h2>
@@ -14,8 +27,9 @@
             </h2>
             <p><%= text %></p>
             <div class="info">
-              <span><%= createdAt.toLocaleDateString() %></span>
-              <span><%= author %></span>
+              <span>Дата создания: <%= createdAt.toLocaleDateString() %></span>
+              <span>Дата окончания: <%= formatDate(endDate) %></span>
+              <span>Автор: <%= author %></span>
             </div>
             <button class="btn-delete" data-id="<%= id %>">
               <i class="fas fa-trash-alt" data-id="<%= id %>"></i>
@@ -38,5 +52,6 @@
       }
     });
   </script>
+  <script src="../controllers/contact-controller.js"></script>
 </body>
 </html>

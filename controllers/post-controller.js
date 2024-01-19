@@ -32,31 +32,32 @@ const getEditPost = (req, res) => {
 }
 
 const editPost = (req, res) => {
-  const { title, author, text } = req.body;
+  const { title, author, text, endDate } = req.body;
   const { id } = req.params;
   Post
-    .findByIdAndUpdate(req.params.id, { title, author, text })
+    .findByIdAndUpdate(req.params.id, { title, author, text, endDate })
     .then((result) => res.redirect(`/posts/${id}`))
     .catch((error) => handleError(res, error));
 }
 
 const getPosts = (req, res) => {
-  const title = 'Posts';
+  const title = 'Посты';
+  const sortBy = req.query.sort || 'createdAt'; // По умолчанию сортировка по дате окончания, если параметр сортировки не предоставлен
+
   Post
     .find()
-    .sort({ createdAt: -1 })
-    .then(posts => res.render(createPath('posts'), { posts, title }))
+    .sort({ [sortBy]: -1 }) // Используйте предоставленный параметр sortBy для сортировки
+    .then(posts => res.render(createPath('posts'), { posts, title, sortBy }))
     .catch((error) => handleError(res, error));
 }
-
 const getAddPost = (req, res) => {
   const title = 'Add Post';
   res.render(createPath('add-post'), { title });
 }
 
 const addPost = (req, res) => {
-  const { title, author, text } = req.body;
-  const post = new Post({ title, author, text });
+  const { title, author, text, endDate } = req.body;
+  const post = new Post({ title, author, text, endDate});
   post
     .save()
     .then((result) => res.redirect('/posts'))
