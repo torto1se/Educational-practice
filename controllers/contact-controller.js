@@ -2,7 +2,7 @@ const Contact = require('../models/contacts');
 const createPath = require('../helpers/create-path');
 
 const getContacts = (req, res) => {
-  const title = 'Contacts';
+  const title = 'Контакты';
   Contact
     .find()
     .then(contacts => res.render(createPath('contacts'), { contacts, title }))
