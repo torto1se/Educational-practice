@@ -42,7 +42,7 @@ const editPost = (req, res) => {
 
 const getPosts = (req, res) => {
   const title = 'Посты';
-  const sortBy = req.query.sort || 'createdAt'; // По умолчанию сортировка по дате окончания, если параметр сортировки не предоставлен
+  const sortBy = req.query.sort || 'createdAt'; 
 
   Post
     .find()
