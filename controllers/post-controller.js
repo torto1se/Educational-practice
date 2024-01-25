@@ -7,7 +7,7 @@ const handleError = (res, error) => {
 };
 
 const getPost = (req, res) => {
-  const title = 'Post';
+  const title = 'Дело';
   Post
     .findById(req.params.id)
     .then(post => res.render(createPath('post'), { post, title }))
@@ -24,7 +24,7 @@ const deletePost = (req, res) => {
 }
 
 const getEditPost = (req, res) => {
-  const title = 'Edit post';
+  const title = 'Редактирование';
   Post
     .findById(req.params.id)
     .then(post => res.render(createPath('edit-post'), { post, title }))
@@ -41,8 +41,8 @@ const editPost = (req, res) => {
 }
 
 const getPosts = (req, res) => {
-  const title = 'Посты';
-  const sortBy = req.query.sort || 'createdAt'; 
+  const title = 'Дела';
+  const sortBy = req.query.sort || 'createdAt'; // По умолчанию сортировка по дате окончания, если параметр сортировки не предоставлен
 
   Post
     .find()
@@ -51,7 +51,7 @@ const getPosts = (req, res) => {
     .catch((error) => handleError(res, error));
 }
 const getAddPost = (req, res) => {
-  const title = 'Add Post';
+  const title = 'Новое дело';
   res.render(createPath('add-post'), { title });
 }
 
